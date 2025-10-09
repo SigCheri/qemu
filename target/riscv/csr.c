@@ -1423,6 +1423,37 @@ static inline bool csr_needs_asr(CPURISCVState *env, int csrno) {
 }
 #endif
 
+#ifdef TARGET_SIGCHERI
+
+static int read_mkey(CPURISCVState *env, int csrno, target_ulong *val)
+{   
+    assert(csrno >= CSR_MKEY_BASE && csrno < CSR_MKEY_BASE + CSR_MKEY_LEN);
+    *val = 0;
+    return 0;
+}
+
+static int write_mkey(CPURISCVState *env, int csrno, target_ulong val)
+{   
+    assert(csrno >= CSR_MKEY_BASE && csrno < CSR_MKEY_BASE + CSR_MKEY_LEN);
+    env->mkey[csrno - CSR_MKEY_BASE] = val;
+    return 0;
+}
+
+static int read_skey(CPURISCVState *env, int csrno, target_ulong *val)
+{   
+    assert(csrno >= CSR_SKEY_BASE && csrno < CSR_SKEY_BASE + CSR_SKEY_LEN);
+    *val = env->skey[csrno - CSR_SKEY_BASE];
+    return 0;
+}
+
+static int write_skey(CPURISCVState *env, int csrno, target_ulong val)
+{   
+    assert(csrno >= CSR_SKEY_BASE && csrno < CSR_SKEY_BASE + CSR_SKEY_LEN);
+    env->skey[csrno - CSR_SKEY_BASE] = val;
+    return 0;
+}
+#endif
+
 /*
  * riscv_csrrw - read and/or update control and status register
  *
@@ -1714,6 +1745,13 @@ riscv_csr_operations csr_ops[CSR_TABLE_SIZE] = {
     [CSR_UCCSR] =               CSR_OP_FN_RW(umode, read_ccsr, write_ccsr, "uccsr"),
     [CSR_SCCSR] =               CSR_OP_FN_RW(smode, read_ccsr, write_ccsr, "sccsr"),
     [CSR_MCCSR] =               CSR_OP_FN_RW(any, read_ccsr, write_ccsr, "mccsr"),
+#endif
+
+#ifdef TARGET_SIGCHERI
+    [CSR_MKEYL] =               CSR_OP_FN_RW(any, read_mkey, write_mkey, "mkeyl"),
+    [CSR_MKEYH] =               CSR_OP_FN_RW(any, read_mkey, write_mkey, "mkeyh"),
+    [CSR_SKEYL] =               CSR_OP_FN_RW(smode, read_skey, write_skey, "skeyl"),
+    [CSR_SKEYH] =               CSR_OP_FN_RW(smode, read_skey, write_skey, "skeyh"),
 #endif
 
     /* Physical Memory Protection */

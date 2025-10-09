@@ -376,6 +376,18 @@
 #define XCCSR_TAG_CLEARING  0x80000000 /* CHERI has tag-clearing semantics. */
 #endif
 
+#ifdef TARGET_SIGCHERI
+#define CSR_MKEYL           0x7f0
+#define CSR_MKEYH           0x7f1
+#define CSR_MKEY_BASE       0x7f0
+#define CSR_MKEY_LEN        0x2
+
+#define CSR_SKEYL           0x5f0
+#define CSR_SKEYH           0x5f1
+#define CSR_SKEY_BASE       0x5f0
+#define CSR_SKEY_LEN        0x2
+#endif
+
 /* mstatus CSR bits */
 #define MSTATUS_UIE         0x00000001
 #define MSTATUS_SIE         0x00000002

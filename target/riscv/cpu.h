@@ -276,6 +276,12 @@ struct CPURISCVState {
     target_ulong satp_hs;
     uint64_t mstatus_hs;
 
+#ifdef TARGET_SIGCHERI
+    /* csr key register */
+    target_ulong mkey[2];
+    target_ulong skey[2];
+#endif
+
     /* Signals whether the current exception occurred with two-stage address
        translation active. */
     bool two_stage_lookup;
