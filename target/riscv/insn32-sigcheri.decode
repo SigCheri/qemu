@@ -1,0 +1,8 @@
+### Three operand instructions
+&key_op end start rs2 rs1 rd
+@key_op end:3 start:3 . rs2:5 rs1:5 ... rd:5 ....... &key_op
+
+cremk       ... ... 0  ..... ..... 000 ..... 1101011 @key_op
+crdmk       ... ... 1  ..... ..... 000 ..... 1101011 @key_op
+cresk       ... ... 0  ..... ..... 001 ..... 1101011 @key_op
+crdsk       ... ... 1  ..... ..... 001 ..... 1101011 @key_op

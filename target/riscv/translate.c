@@ -764,6 +764,11 @@ static uint32_t opcode_at(DisasContextBase *dcbase, target_ulong pc)
 #ifdef TARGET_CHERI
 /* Must be included first since the helpers are used by trans_rvi.c.inc */
 #include "insn_trans/trans_cheri.c.inc"
+
+#ifdef TARGET_SIGCHERI
+#include "insn_trans/trans_sigcheri.c.inc"
+#endif
+
 #else
 /* Stubs needed for mode-dependent compressed instructions */
 
