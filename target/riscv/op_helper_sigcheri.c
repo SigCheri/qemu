@@ -28,26 +28,26 @@ static void get_key_examine_priv(CPUArchState *env, uint64_t key_sel, target_ulo
 }
 
 target_ulong HELPER(encrypt_op)(CPUArchState *env, target_ulong plaintext, target_ulong tweak, uint64_t keysel, uint64_t mask){
-    printf("\nencrypt_op: GETPC = %016lx\n", GETPC());
+    // printf("\nencrypt_op: GETPC = %016lx\n", GETPC());
     plaintext &= (target_ulong)mask;
     target_ulong keyl, keyh;
-    printf("encrypt_op: plaint = %016lx, tweak = %016lx, mask = %016lx\n", plaintext, tweak, mask);
+    // printf("encrypt_op: plaint = %016lx, tweak = %016lx, mask = %016lx\n", plaintext, tweak, mask);
     get_key_examine_priv(env, keysel, &keyl, &keyh);
-    printf("encrypt_op: key = %c, keyl = %016lx, keyh = %016lx\n", keysel?'s':'m', keyl, keyh);
+    // printf("encrypt_op: key = %c, keyl = %016lx, keyh = %016lx\n", keysel?'s':'m', keyl, keyh);
     target_ulong result = qarma64_enc(plaintext, tweak, keyl, keyh, 7);
-    printf("encrypt_op: result = %016lx\n", result);
+    // printf("encrypt_op: result = %016lx\n", result);
     return result;
 }
 
 target_ulong HELPER(decrypt_op)(CPUArchState *env, target_ulong secret, target_ulong tweak, uint64_t keysel, uint64_t mask){
-    printf("\ndecrypt_op: GETPC = %016lx\n", GETPC());
+    // printf("\ndecrypt_op: GETPC = %016lx\n", GETPC());
     
     target_ulong keyl, keyh;
-    printf("decrypt_op: secret = %016lx, tweak = %016lx, mask = %016lx\n", secret, tweak, mask);
+    // printf("decrypt_op: secret = %016lx, tweak = %016lx, mask = %016lx\n", secret, tweak, mask);
     get_key_examine_priv(env, keysel, &keyl, &keyh);
-    printf("decrypt_op: key = %c, keyl = %016lx, keyh = %016lx\n", keysel?'s':'m', keyl, keyh);
+    // printf("decrypt_op: key = %c, keyl = %016lx, keyh = %016lx\n", keysel?'s':'m', keyl, keyh);
     target_ulong result = qarma64_dec(secret, tweak, keyl, keyh, 7);
-    printf("decrypt_op: result = %016lx\n", result);
+    // printf("decrypt_op: result = %016lx\n", result);
     if((result & (target_ulong)mask) == result){
         return result;
     }else{
