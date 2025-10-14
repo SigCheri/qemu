@@ -1,7 +1,6 @@
 # FIXME extra_args should accept files()
 dir = meson.current_source_dir()
 
-# --- common decodetree rules ---
 gen32 = [
   decodetree.process('insn16.decode',
     extra_args: [dir / 'insn16-32.decode', '--static-decode=decode_insn16', '--insnwidth=16']),
@@ -17,7 +16,6 @@ gen64 = [
 ]
 
 # FIXME: would be nice to avoid this duplication but I don't see an easy way to
-# do this since the TARGET_CHERI check is evaluated later.
 gen32_cheri = [
   decodetree.process('insn16.decode',
     extra_args: [dir / 'insn16-32.decode', '--static-decode=decode_insn16', '--insnwidth=16']),
@@ -32,7 +30,6 @@ gen64_cheri = [
     extra_args: [dir / 'insn32-64.decode', dir / 'insn32-cheri.decode', dir / 'insn32-cheri-64.decode', '--static-decode=decode_insn32']),
 ]
 
-# --- SIGCHERI extension (only used under TARGET_CHERI) ---
 gen64_sigcheri = [
   decodetree.process('insn16.decode',
     extra_args: [dir / 'insn16-64.decode', '--static-decode=decode_insn16', '--insnwidth=16']),
@@ -40,7 +37,6 @@ gen64_sigcheri = [
     extra_args: [dir / 'insn32-64.decode', dir / 'insn32-cheri.decode', dir / 'insn32-cheri-64.decode', dir / 'insn32-sigcheri.decode', '--static-decode=decode_insn32']),
 ]
 
-# --- source sets ---
 riscv32_ss = ss.source_set()
 riscv32_ss.add(when: 'TARGET_CHERI', if_true: gen32_cheri, if_false: gen32)
 
