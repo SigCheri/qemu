@@ -1,37 +1,56 @@
 # FIXME extra_args should accept files()
 dir = meson.current_source_dir()
+
+# --- common decodetree rules ---
 gen32 = [
-  decodetree.process('insn16.decode', extra_args: [dir / 'insn16-32.decode', '--static-decode=decode_insn16', '--insnwidth=16']),
-  decodetree.process('insn32.decode', extra_args: '--static-decode=decode_insn32'),
+  decodetree.process('insn16.decode',
+    extra_args: [dir / 'insn16-32.decode', '--static-decode=decode_insn16', '--insnwidth=16']),
+  decodetree.process('insn32.decode',
+    extra_args: '--static-decode=decode_insn32'),
 ]
 
 gen64 = [
-  decodetree.process('insn16.decode', extra_args: [dir / 'insn16-64.decode', '--static-decode=decode_insn16', '--insnwidth=16']),
-  decodetree.process('insn32.decode', extra_args: [dir / 'insn32-64.decode', '--static-decode=decode_insn32']),
+  decodetree.process('insn16.decode',
+    extra_args: [dir / 'insn16-64.decode', '--static-decode=decode_insn16', '--insnwidth=16']),
+  decodetree.process('insn32.decode',
+    extra_args: [dir / 'insn32-64.decode', '--static-decode=decode_insn32']),
 ]
 
 # FIXME: would be nice to avoid this duplication but I don't see an easy way to
-# do this since the TARGET_CHERI check is evaulated later.
+# do this since the TARGET_CHERI check is evaluated later.
 gen32_cheri = [
-  decodetree.process('insn16.decode', extra_args: [dir / 'insn16-32.decode', '--static-decode=decode_insn16', '--insnwidth=16']),
-  decodetree.process('insn32.decode', extra_args: [dir / 'insn32-cheri.decode', dir / 'insn32-cheri-32.decode', '--static-decode=decode_insn32']),
-]
-gen64_cheri = [
-  decodetree.process('insn16.decode', extra_args: [dir / 'insn16-64.decode', '--static-decode=decode_insn16', '--insnwidth=16']),
-  decodetree.process('insn32.decode', extra_args: [dir / 'insn32-64.decode', dir / 'insn32-cheri.decode', dir / 'insn32-cheri-64.decode', '--static-decode=decode_insn32']),
-]
-gen64_sigcheri = [
-  decodetree.process('insn16.decode', extra_args: [dir / 'insn16-64.decode', '--static-decode=decode_insn16', '--insnwidth=16']),
-  decodetree.process('insn32.decode', extra_args: [dir / 'insn32-64.decode', dir / 'insn32-cheri.decode', dir / 'insn32-cheri-64.decode', dir / 'insn32-sigcheri.decode', '--static-decode=decode_insn32']),
+  decodetree.process('insn16.decode',
+    extra_args: [dir / 'insn16-32.decode', '--static-decode=decode_insn16', '--insnwidth=16']),
+  decodetree.process('insn32.decode',
+    extra_args: [dir / 'insn32-cheri.decode', dir / 'insn32-cheri-32.decode', '--static-decode=decode_insn32']),
 ]
 
+gen64_cheri = [
+  decodetree.process('insn16.decode',
+    extra_args: [dir / 'insn16-64.decode', '--static-decode=decode_insn16', '--insnwidth=16']),
+  decodetree.process('insn32.decode',
+    extra_args: [dir / 'insn32-64.decode', dir / 'insn32-cheri.decode', dir / 'insn32-cheri-64.decode', '--static-decode=decode_insn32']),
+]
+
+# --- SIGCHERI extension (only used under TARGET_CHERI) ---
+gen64_sigcheri = [
+  decodetree.process('insn16.decode',
+    extra_args: [dir / 'insn16-64.decode', '--static-decode=decode_insn16', '--insnwidth=16']),
+  decodetree.process('insn32.decode',
+    extra_args: [dir / 'insn32-64.decode', dir / 'insn32-cheri.decode', dir / 'insn32-cheri-64.decode', dir / 'insn32-sigcheri.decode', '--static-decode=decode_insn32']),
+]
+
+# --- source sets ---
 riscv32_ss = ss.source_set()
 riscv32_ss.add(when: 'TARGET_CHERI', if_true: gen32_cheri, if_false: gen32)
 
 riscv64_ss = ss.source_set()
-specific_ss.add(when: 'TARGET_SIGCHERI', if_true: gen64_sigcheri)
-specific_ss.add(when: ['TARGET_CHERI', 'not TARGET_SIGCHERI'], if_true: gen64_cheri)
-specific_ss.add(when: ['not TARGET_CHERI', 'not TARGET_SIGCHERI'], if_true: gen64)
+
+_riscv64_cheri_sel = ss.source_set()
+_riscv64_cheri_sel.add(when: 'TARGET_SIGCHERI', if_true: gen64_sigcheri, if_false: gen64_cheri)
+riscv64_ss.add_all(when: 'TARGET_CHERI', if_true: _riscv64_cheri_sel)
+riscv64_ss.add(when: 'TARGET_CHERI', if_false: gen64)
+
 
 riscv_ss = ss.source_set()
 riscv_ss.add_all(when: 'TARGET_RISCV32', if_true: riscv32_ss)
