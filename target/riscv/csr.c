@@ -1442,7 +1442,7 @@ static int write_mkey(CPURISCVState *env, int csrno, target_ulong val)
 static int read_skey(CPURISCVState *env, int csrno, target_ulong *val)
 {   
     assert(csrno >= CSR_SKEY_BASE && csrno < CSR_SKEY_BASE + CSR_SKEY_LEN);
-    *val = env->skey[csrno - CSR_SKEY_BASE];
+    *val = 0;
     return 0;
 }
 
