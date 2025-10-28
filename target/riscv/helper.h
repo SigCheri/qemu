@@ -75,6 +75,14 @@ DEF_HELPER_3(sc_c_cap, tl, env, i32, i32)
 #ifdef TARGET_SIGCHERI
 DEF_HELPER_5(encrypt_op, tl, env, tl, tl, i64, i64)
 DEF_HELPER_5(decrypt_op, tl, env, tl, tl, i64, i64)
+DEF_HELPER_3(load_tweak_via_ddc, tl, env, tl, i64)
+DEF_HELPER_4(load_tweak_via_cap, tl, env, tl, i32, i64)
+DEF_HELPER_3(store_tweak_via_ddc, void, env, tl, tl)
+DEF_HELPER_4(store_tweak_via_cap, void, env, tl, i32, tl)
+DEF_HELPER_4(load_sig_via_ddc, void, env, i32, tl, i64)
+DEF_HELPER_5(load_sig_via_cap, void, env, i32, tl, i32, i64)
+DEF_HELPER_4(store_sig_via_ddc, void, env, i32, tl, i64)
+DEF_HELPER_5(store_sig_via_cap, void, env, i32, tl, i32, i64)
 #endif
 
 #endif

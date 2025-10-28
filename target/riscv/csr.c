@@ -1452,6 +1452,26 @@ static int write_skey(CPURISCVState *env, int csrno, target_ulong val)
     env->skey[csrno - CSR_SKEY_BASE] = val;
     return 0;
 }
+
+static int read_tweakoff(CPURISCVState *env, int csrno, target_ulong *val)
+{   
+    assert(csrno >= CSR_TWEAKOFF_BASE && csrno < CSR_TWEAKOFF_BASE + CSR_TWEAKOFF_LEN);
+    if(csrno == CSR_TWEAKOFF0){
+        *val = 0;
+    }else{
+        *val = env->tweakoff[csrno - CSR_TWEAKOFF_BASE - 1];
+    }
+    return 0;
+}
+
+static int write_tweakoff(CPURISCVState *env, int csrno, target_ulong val)
+{   
+    assert(csrno >= CSR_TWEAKOFF_BASE && csrno < CSR_TWEAKOFF_BASE + CSR_TWEAKOFF_LEN);
+    if(csrno != CSR_TWEAKOFF0){
+        env->tweakoff[csrno - CSR_TWEAKOFF_BASE - 1] = val;
+    }
+    return 0;
+}
 #endif
 
 /*
@@ -1752,6 +1772,13 @@ riscv_csr_operations csr_ops[CSR_TABLE_SIZE] = {
     [CSR_MKEYH] =               CSR_OP_FN_RW(any, read_mkey, write_mkey, "mkeyh"),
     [CSR_SKEYL] =               CSR_OP_FN_RW(smode, read_skey, write_skey, "skeyl"),
     [CSR_SKEYH] =               CSR_OP_FN_RW(smode, read_skey, write_skey, "skeyh"),
+    [CSR_TWEAKOFF0] =      CSR_OP_FN_RW(umode, read_tweakoff, write_tweakoff, "tweakoff0"),
+    [CSR_TWEAKOFF1] =      CSR_OP_FN_RW(umode, read_tweakoff, write_tweakoff, "tweakoff1"),
+    [CSR_TWEAKOFF2] =      CSR_OP_FN_RW(umode, read_tweakoff, write_tweakoff, "tweakoff2"),
+    [CSR_TWEAKOFF3] =      CSR_OP_FN_RW(umode, read_tweakoff, write_tweakoff, "tweakoff3"),
+    [CSR_TWEAKOFF4] =      CSR_OP_FN_RW(umode, read_tweakoff, write_tweakoff, "tweakoff4"),
+    [CSR_TWEAKOFF5] =      CSR_OP_FN_RW(umode, read_tweakoff, write_tweakoff, "tweakoff5"),
+    [CSR_TWEAKOFF6] =      CSR_OP_FN_RW(umode, read_tweakoff, write_tweakoff, "tweakoff6"),
 #endif
 
     /* Physical Memory Protection */

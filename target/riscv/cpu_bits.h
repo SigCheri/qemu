@@ -386,6 +386,16 @@
 #define CSR_SKEYH           0x5f1
 #define CSR_SKEY_BASE       0x5f0
 #define CSR_SKEY_LEN        0x2
+
+#define CSR_TWEAKOFF0  0x1f0
+#define CSR_TWEAKOFF1  0x1f1
+#define CSR_TWEAKOFF2  0x1f2
+#define CSR_TWEAKOFF3  0x1f3
+#define CSR_TWEAKOFF4  0x1f4
+#define CSR_TWEAKOFF5  0x1f5
+#define CSR_TWEAKOFF6  0x1f6
+#define CSR_TWEAKOFF_BASE 0x1f0
+#define CSR_TWEAKOFF_LEN 0x7
 #endif
 
 /* mstatus CSR bits */

@@ -280,6 +280,11 @@ struct CPURISCVState {
     /* csr key register */
     target_ulong mkey[2];
     target_ulong skey[2];
+
+    /* 7 signature shadow register, 
+       the first one always be 0
+    */
+    target_ulong tweakoff[6];
 #endif
 
     /* Signals whether the current exception occurred with two-stage address
