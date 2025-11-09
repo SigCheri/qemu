@@ -256,7 +256,7 @@ void HELPER(load_sig_via_cap)(CPUArchState *env, uint32_t destreg, target_ulong 
     const cap_register_t *cbp = get_capreg_or_special(env, authreg);
     const target_ulong checked_addr =
         cap_check_common_reg(perms_for_load(), env, authreg,
-                             cheri_ddc_relative_addr(env, addr),
+                             addr,
                              CHERI_CAP_SIZE, _host_return_address, cbp,
                              CHERI_CAP_SIZE, raise_unaligned_load_exception);
 
@@ -293,7 +293,7 @@ void HELPER(store_sig_via_cap)(CPUArchState *env, uint32_t srcreg, target_ulong 
     const cap_register_t *cbp = get_capreg_or_special(env, authreg);
     const target_ulong checked_addr =
         cap_check_common_reg(perms_for_store(env, srcreg), env, authreg,
-                             cheri_ddc_relative_addr(env, addr),
+                             addr,
                              CHERI_CAP_SIZE, _host_return_address, cbp,
                              CHERI_CAP_SIZE, raise_unaligned_store_exception);
 
